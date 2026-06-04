@@ -1,12 +1,10 @@
-import { useEffect, useRef } from 'react';
-
 const CATEGORY_LABELS = {
-  frontend: '🎨 Frontend',
-  backend: '⚙️ Backend',
-  database: '🗄️ Database',
-  tools: '🛠️ Tools & DevOps',
-  language: '📝 Languages',
-  other: '🤖 AI / ML',
+  frontend: { label: 'Frontend', icon: '🎨' },
+  backend: { label: 'Backend', icon: '⚙️' },
+  database: { label: 'Database', icon: '🗄️' },
+  tools: { label: 'Tools & DevOps', icon: '🛠️' },
+  language: { label: 'Languages', icon: '📝' },
+  other: { label: 'AI / ML', icon: '🤖' },
 };
 
 function groupByCategory(skills) {
@@ -18,35 +16,6 @@ function groupByCategory(skills) {
   }, {});
 }
 
-function SkillBar({ name, proficiency }) {
-  const fillRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && fillRef.current) {
-          fillRef.current.style.width = `${proficiency}%`;
-        }
-      },
-      { threshold: 0.3 }
-    );
-    if (fillRef.current) observer.observe(fillRef.current.parentElement);
-    return () => observer.disconnect();
-  }, [proficiency]);
-
-  return (
-    <div className="skill-item">
-      <div className="skill-header">
-        <span className="skill-name">{name}</span>
-        <span className="skill-pct">{proficiency}%</span>
-      </div>
-      <div className="skill-bar-track">
-        <div ref={fillRef} className="skill-bar-fill" style={{ width: 0 }} />
-      </div>
-    </div>
-  );
-}
-
 export default function Skills({ skills }) {
   const grouped = groupByCategory(skills || []);
 
@@ -54,23 +23,31 @@ export default function Skills({ skills }) {
     <section id="skills">
       <div className="section">
         <p className="section-label">What I Know</p>
-        <h2 className="section-title">Skills & <span>Expertise</span></h2>
+        <h2 className="section-title">Skills </h2>
         <div className="divider" />
         <p className="section-desc">
           Technologies and tools I work with daily to craft high-quality digital experiences.
         </p>
 
         <div className="skills-grid">
-          {Object.entries(grouped).map(([cat, items]) => (
-            <div key={cat} className="skill-category-card">
-              <div className="skill-category-title">
-                {CATEGORY_LABELS[cat] || cat}
+          {Object.entries(grouped).map(([cat, items]) => {
+            const meta = CATEGORY_LABELS[cat] || { label: cat, icon: '💡' };
+            return (
+              <div key={cat} className="skill-category-card">
+                <div className="skill-category-title">
+                  <span className="skill-cat-icon">{meta.icon}</span>
+                  {meta.label}
+                </div>
+                <div className="skill-pills">
+                  {items.map((s) => (
+                    <span key={s.id} className="skill-pill">
+                      {s.name}
+                    </span>
+                  ))}
+                </div>
               </div>
-              {items.map((s) => (
-                <SkillBar key={s.id} name={s.name} proficiency={s.proficiency} />
-              ))}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

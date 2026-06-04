@@ -8,10 +8,11 @@ import django
 
 # ── Setup Django ──────────────────────────────────────────────────────────────
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backend_project'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend_project.settings')
 django.setup()
 
-from backend.backend_project.backend_app.models import Profile, Skill, Project, Experience, Education, Certification
+from backend_app.models import Profile, Skill, Project, Experience, Education, Certification
 
 # ── Clear existing data ───────────────────────────────────────────────────────
 Profile.objects.all().delete()
@@ -30,7 +31,7 @@ Profile.objects.create(
     email="rangurahul98@gmail.com",
     phone="+91 9177753961",
     location="Hyderabad, India",
-    github="https://www.geeksforgeeks.org/user/ranguraj2nv/",
+    github="https://github.com/rangu-rahul",
     linkedin="https://www.linkedin.com/in/rangu-rahul",
     available=True,
 )
@@ -67,19 +68,28 @@ projects = [
         "title": "Smart House Price Prediction",
         "description": "AI-powered web app that predicts house prices using machine learning models with geospatial data integration.",
         "tech_stack": ["Python", "Django", "scikit-learn", "React", "MySQL"],
-        "github_url": "",
+        "github_url": "https://github.com/rangu-rahul/smart_house_prediction",
         "live_url": "",
         "featured": True,
         "order": 0,
     },
     {
-        "title": "AI Tutor LMS Dashboard",
+        "title": "AI Tutor LMS Platform",
         "description": "Intelligent Learning Management System with AI-powered learning paths, real-time analytics, and gamification features.",
         "tech_stack": ["Django", "React", "Gemini AI", "MySQL", "REST API"],
         "github_url": "",
         "live_url": "",
         "featured": True,
         "order": 1,
+    },
+    {
+        "title": "Stock Prediction",
+        "description": "Stock market prediction web app that forecasts stock prices using machine learning algorithms and historical market data.",
+        "tech_stack": ["Python", "Django", "React", "scikit-learn", "REST API"],
+        "github_url": "https://github.com/rangu-rahul/stock_prediction",
+        "live_url": "",
+        "featured": False,
+        "order": 2,
     },
 ]
 for p in projects:
@@ -91,13 +101,13 @@ from datetime import date
 # (Keeping experience empty since there is none explicitly in the PDF, but you can add your Edunet/EY internship here)
 Experience.objects.create(
     company="Edunet Foundation / EY",
-    role="AI/ML Intern",
-    start_date=date(2024, 1, 1),
-    end_date=date(2024, 4, 30),
+    role="Python Full Stack Web Developer",
+    start_date=date(2025, 9, 1),
+    end_date=date(2026, 2, 28),
     current=False,
     description="Built an AI Tutor Dashboard during internship. Developed ML models, integrated Gemini AI API, "
                 "and created analytics dashboards. Mentored by industry professionals.",
-    location="Remote",
+    location="Hybrid",
     order=0,
 )
 
@@ -126,7 +136,7 @@ Education.objects.create(
     institution="Nalanda High School",
     degree="SSC",
     field="",
-    start_year=2013,
+    start_year=2019,
     end_year=2020,
     current=False,
     order=2,

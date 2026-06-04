@@ -5,11 +5,12 @@ import Hero from './components/Hero';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Experience from './components/Experience';
+import Education from './components/Education';
 import Certifications from './components/Certifications';
 import Contact from './components/Contact';
 import './index.css';
 
-const SECTIONS = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
+const SECTIONS = ['home', 'about', 'skills', 'projects', 'experience', 'education', 'contact'];
 
 export default function App() {
   const [data, setData] = useState(null);
@@ -63,11 +64,11 @@ export default function App() {
   }
 
   // If backend is unreachable, still show the page with empty data
-  const profile        = data?.profile        || null;
-  const skills         = data?.skills         || [];
-  const projects       = data?.projects       || [];
-  const experience     = data?.experience     || [];
-  const education      = data?.education      || [];
+  const profile = data?.profile || null;
+  const skills = data?.skills || [];
+  const projects = data?.projects || [];
+  const experience = data?.experience || [];
+  const education = data?.education || [];
   const certifications = data?.certifications || [];
 
   return (
@@ -96,7 +97,7 @@ export default function App() {
               textAlign: 'center',
               fontSize: '0.875rem',
             }}>
-              ⚠️ Could not connect to Django backend ({error}). 
+              ⚠️ Could not connect to Django backend ({error}).
               Make sure the server is running on <code>http://127.0.0.1:8000</code>.
             </div>
           )}
@@ -104,17 +105,18 @@ export default function App() {
 
         <Skills skills={skills} />
         <Projects projects={projects} />
-        <Experience experience={experience} education={education} />
+        <Experience experience={experience} />
+        <Education education={education} />
         <Certifications certifications={certifications} />
         <Contact profile={profile} />
       </main>
 
       <footer className="footer">
         <p>
-          Designed & Built with ❤️ by <span>{profile?.name || 'You'}</span> · React + Django
+          <span>{profile?.name || 'You'}</span>
         </p>
         <p style={{ marginTop: '0.4rem', fontSize: '0.75rem' }}>
-          © {new Date().getFullYear()} · All rights reserved
+          {new Date().getFullYear()}
         </p>
       </footer>
 

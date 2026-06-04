@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const SECTIONS = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
+const SECTIONS = ['home', 'about', 'skills', 'projects', 'experience', 'education', 'contact'];
 
 export default function Navbar({ activeSection }) {
   const [scrolled, setScrolled] = useState(false);
@@ -20,7 +20,7 @@ export default function Navbar({ activeSection }) {
   return (
     <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
       <span className="nav-logo" onClick={() => scrollTo('home')} style={{ cursor: 'pointer' }}>
-        &lt;Portfolio /&gt;
+        &lt;Rangu Rahul&gt;
       </span>
 
       {/* Desktop links */}
