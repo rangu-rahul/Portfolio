@@ -1,4 +1,4 @@
-import profilePhoto from '../assets/profile.jpeg';
+import profilePhoto from '../assets/Profile.jpeg';
 
 export default function Hero({ profile }) {
   const scrollTo = (id) =>
