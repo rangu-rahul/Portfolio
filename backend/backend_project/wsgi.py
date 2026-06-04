@@ -8,9 +8,14 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
 """
 
 import os
+import sys
+from pathlib import Path
+
+# Add backend_project dir to path so backend_app module can be found
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'port.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend_project.settings')
 
 application = get_wsgi_application()
