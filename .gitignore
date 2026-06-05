@@ -56,3 +56,6 @@ backend/pdf_content.txt
 .DS_Store
 Thumbs.db
 desktop.ini
+
+
+backend/test_email.py
