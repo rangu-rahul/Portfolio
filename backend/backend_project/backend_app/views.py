@@ -1,9 +1,9 @@
 import logging
+import resend
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Profile, Skill, Project, Experience, Education, Certification, ContactMessage
-from django.core.mail import send_mail
 from django.conf import settings
 from .serializers import (
     ProfileSerializer, SkillSerializer, ProjectSerializer,
@@ -68,28 +68,29 @@ class ContactView(generics.CreateAPIView):
         subject = serializer.validated_data["subject"]
         message = serializer.validated_data["message"]
 
+        # Set Resend API key
+        resend.api_key = settings.RESEND_API_KEY
+
         # Email to Rahul
         try:
-            send_mail(
-                subject=f"Portfolio Contact: {subject}",
-                message=f"""New message from portfolio website\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}""",
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=["rangurahul98@gmail.com"],
-                fail_silently=False,
-            )
+            resend.Emails.send({
+                "from": "Portfolio Contact <onboarding@resend.dev>",
+                "to": ["rangurahul98@gmail.com"],
+                "subject": f"Portfolio Contact: {subject}",
+                "text": f"New message from portfolio website\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}",
+            })
             logger.info("Contact notification email sent to rangurahul98@gmail.com")
         except Exception as e:
             logger.error(f"Failed to send contact notification email: {e}")
 
         # Auto reply to visitor
         try:
-            send_mail(
-                subject="Thank you for contacting Rahul",
-                message=f"""Hi {name},\n\nThank you for contacting me.\n\nI have received your message and will get back to you soon.\n\nRegards,\nRahul Rangu""",
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+            resend.Emails.send({
+                "from": "Rahul Rangu <onboarding@resend.dev>",
+                "to": [email],
+                "subject": "Thank you for contacting Rahul",
+                "text": f"Hi {name},\n\nThank you for contacting me.\n\nI have received your message and will get back to you soon.\n\nRegards,\nRahul Rangu",
+            })
             logger.info(f"Auto-reply email sent to {email}")
         except Exception as e:
             logger.error(f"Failed to send auto-reply email: {e}")
@@ -118,25 +119,19 @@ class TestEmailView(APIView):
     """Temporary debug endpoint — sends a test email and returns JSON result."""
 
     def get(self, request):
-        import socket
+        resend.api_key = settings.RESEND_API_KEY
         result = {
-            'email_host':     settings.EMAIL_HOST,
-            'email_port':     settings.EMAIL_PORT,
-            'email_user':     settings.EMAIL_HOST_USER,
-            'password_len':   len(settings.EMAIL_HOST_PASSWORD),
-            'use_tls':        settings.EMAIL_USE_TLS,
-            'timeout':        getattr(settings, 'EMAIL_TIMEOUT', None),
+            'resend_key_len': len(getattr(settings, 'RESEND_API_KEY', '')),
         }
         try:
-            send_mail(
-                subject='[Render Test] Portfolio Email Check',
-                message='If you received this, email sending works on Render!',
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=['rangurahul98@gmail.com'],
-                fail_silently=False,
-            )
+            resend.Emails.send({
+                "from": "Portfolio Test <onboarding@resend.dev>",
+                "to": ["rangurahul98@gmail.com"],
+                "subject": "[Render Test] Portfolio Email Check",
+                "text": "If you received this, Resend email works on Render!",
+            })
             result['status'] = 'SUCCESS'
-            result['message'] = 'Email sent! Check rangurahul98@gmail.com'
+            result['message'] = 'Email sent via Resend! Check rangurahul98@gmail.com'
         except Exception as e:
             result['status'] = 'FAILED'
             result['error'] = str(e)
