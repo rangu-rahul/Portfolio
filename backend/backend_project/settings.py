@@ -12,7 +12,11 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-local-dev-only')
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "portfolio-kg0e.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',

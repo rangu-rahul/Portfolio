@@ -9,7 +9,23 @@ import django
 # ── Setup Django ──────────────────────────────────────────────────────────────
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backend_project'))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend_project.settings')
+
+print("Choose database to seed:")
+print("1) Local Database")
+print("2) Production Database (Render)")
+choice = input("Enter option (1 or 2): ").strip()
+
+if choice == "2":
+    url = input("Paste your Render EXTERNAL Database URL (starts with postgres://): ").strip()
+    if not url:
+        print("❌ Database URL cannot be empty!")
+        sys.exit(1)
+    os.environ['DATABASE_URL'] = url
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'backend_project.settings_prod'
+    os.environ['DJANGO_SECRET_KEY'] = 'django-insecure-seed-key'
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend_project.settings')
+
 django.setup()
 
 from backend_app.models import Profile, Skill, Project, Experience, Education, Certification

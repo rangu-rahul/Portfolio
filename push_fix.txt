@@ -1,0 +1,4 @@
+# Steps to push and deploy backend to Render
+git add backend/backend_project/settings.py
+git commit -m "fix: read SECRET_KEY and DEBUG from env vars"
+git push
