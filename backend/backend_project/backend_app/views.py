@@ -50,7 +50,6 @@ class CertificationListView(generics.ListAPIView):
     queryset = Certification.objects.all()
     serializer_class = CertificationSerializer
 
-
 class ContactView(generics.CreateAPIView):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
@@ -70,42 +69,41 @@ class ContactView(generics.CreateAPIView):
         send_mail(
             subject=f"Portfolio Contact: {subject}",
             message=f"""
-    New message from portfolio website
+New message from portfolio website
 
-    Name: {name}
-    Email: {email}
+Name: {name}
+Email: {email}
 
-    Message:
-    {message}
-    """,
+Message:
+{message}
+""",
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=["rangurahul98@gmail.com"],
-            fail_silently=False,
+            fail_silently=True,
         )
 
         # Auto reply to visitor
         send_mail(
             subject="Thank you for contacting Rahul",
             message=f"""
-    Hi {name},
+Hi {name},
 
-    Thank you for contacting me.
+Thank you for contacting me.
 
-    I have received your message and will get back to you soon.
+I have received your message and will get back to you soon.
 
-    Regards,
-    Rahul Rangu
-    """,
+Regards,
+Rahul Rangu
+""",
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[email],
-            fail_silently=False,
+            fail_silently=True,
         )
 
         return Response(
             {"message": "Message sent successfully! I will get back to you soon."},
             status=status.HTTP_201_CREATED
         )
-
 
 class PortfolioSummaryView(APIView):
     """Returns all portfolio data in one request."""
