@@ -114,3 +114,32 @@ class PortfolioSummaryView(APIView):
         })
 
 
+class TestEmailView(APIView):
+    """Temporary debug endpoint — sends a test email and returns JSON result."""
+
+    def get(self, request):
+        import socket
+        result = {
+            'email_host':     settings.EMAIL_HOST,
+            'email_port':     settings.EMAIL_PORT,
+            'email_user':     settings.EMAIL_HOST_USER,
+            'password_len':   len(settings.EMAIL_HOST_PASSWORD),
+            'use_tls':        settings.EMAIL_USE_TLS,
+            'timeout':        getattr(settings, 'EMAIL_TIMEOUT', None),
+        }
+        try:
+            send_mail(
+                subject='[Render Test] Portfolio Email Check',
+                message='If you received this, email sending works on Render!',
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=['rangurahul98@gmail.com'],
+                fail_silently=False,
+            )
+            result['status'] = 'SUCCESS'
+            result['message'] = 'Email sent! Check rangurahul98@gmail.com'
+        except Exception as e:
+            result['status'] = 'FAILED'
+            result['error'] = str(e)
+        return Response(result)
+
+
