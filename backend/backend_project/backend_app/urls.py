@@ -10,5 +10,4 @@ urlpatterns = [
     path('certifications/', views.CertificationListView.as_view(),name='certifications'),
     path('contact/',        views.ContactView.as_view(),          name='contact'),
     path('summary/',        views.PortfolioSummaryView.as_view(), name='summary'),
-    path('test-email/',     views.TestEmailView.as_view(),        name='test-email'),  # debug only
 ]

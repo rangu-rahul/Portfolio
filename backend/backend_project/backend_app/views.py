@@ -115,26 +115,5 @@ class PortfolioSummaryView(APIView):
         })
 
 
-class TestEmailView(APIView):
-    """Temporary debug endpoint — sends a test email and returns JSON result."""
-
-    def get(self, request):
-        resend.api_key = settings.RESEND_API_KEY
-        result = {
-            'resend_key_len': len(getattr(settings, 'RESEND_API_KEY', '')),
-        }
-        try:
-            resend.Emails.send({
-                "from": "Portfolio Test <onboarding@resend.dev>",
-                "to": ["rangurahul98@gmail.com"],
-                "subject": "[Render Test] Portfolio Email Check",
-                "text": "If you received this, Resend email works on Render!",
-            })
-            result['status'] = 'SUCCESS'
-            result['message'] = 'Email sent via Resend! Check rangurahul98@gmail.com'
-        except Exception as e:
-            result['status'] = 'FAILED'
-            result['error'] = str(e)
-        return Response(result)
 
 
