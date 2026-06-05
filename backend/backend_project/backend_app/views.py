@@ -1,3 +1,4 @@
+import logging
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +10,8 @@ from .serializers import (
     ExperienceSerializer, EducationSerializer, CertificationSerializer,
     ContactMessageSerializer,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class ProfileView(APIView):
@@ -66,39 +69,30 @@ class ContactView(generics.CreateAPIView):
         message = serializer.validated_data["message"]
 
         # Email to Rahul
-        send_mail(
-            subject=f"Portfolio Contact: {subject}",
-            message=f"""
-New message from portfolio website
-
-Name: {name}
-Email: {email}
-
-Message:
-{message}
-""",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=["rangurahul98@gmail.com"],
-            fail_silently=True,
-        )
+        try:
+            send_mail(
+                subject=f"Portfolio Contact: {subject}",
+                message=f"""New message from portfolio website\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}""",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=["rangurahul98@gmail.com"],
+                fail_silently=False,
+            )
+            logger.info("Contact notification email sent to rangurahul98@gmail.com")
+        except Exception as e:
+            logger.error(f"Failed to send contact notification email: {e}")
 
         # Auto reply to visitor
-        send_mail(
-            subject="Thank you for contacting Rahul",
-            message=f"""
-Hi {name},
-
-Thank you for contacting me.
-
-I have received your message and will get back to you soon.
-
-Regards,
-Rahul Rangu
-""",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[email],
-            fail_silently=True,
-        )
+        try:
+            send_mail(
+                subject="Thank you for contacting Rahul",
+                message=f"""Hi {name},\n\nThank you for contacting me.\n\nI have received your message and will get back to you soon.\n\nRegards,\nRahul Rangu""",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+            logger.info(f"Auto-reply email sent to {email}")
+        except Exception as e:
+            logger.error(f"Failed to send auto-reply email: {e}")
 
         return Response(
             {"message": "Message sent successfully! I will get back to you soon."},
