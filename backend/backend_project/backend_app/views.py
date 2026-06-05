@@ -78,19 +78,3 @@ class PortfolioSummaryView(APIView):
         })
 
 
-
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .models import ContactMessage
-
-class ContactMessagesView(APIView):
-    def get(self, request):
-        data = list(
-            ContactMessage.objects.values(
-                "name",
-                "email",
-                "subject",
-                "created_at"
-            )
-        )
-        return Response(data)
