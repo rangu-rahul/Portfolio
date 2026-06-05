@@ -2,6 +2,8 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Profile, Skill, Project, Experience, Education, Certification, ContactMessage
+from django.core.mail import send_mail
+from django.conf import settings
 from .serializers import (
     ProfileSerializer, SkillSerializer, ProjectSerializer,
     ExperienceSerializer, EducationSerializer, CertificationSerializer,
@@ -56,9 +58,51 @@ class ContactView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
         self.perform_create(serializer)
+
+        name = serializer.validated_data["name"]
+        email = serializer.validated_data["email"]
+        subject = serializer.validated_data["subject"]
+        message = serializer.validated_data["message"]
+
+        # Email to Rahul
+        send_mail(
+            subject=f"Portfolio Contact: {subject}",
+            message=f"""
+    New message from portfolio website
+
+    Name: {name}
+    Email: {email}
+
+    Message:
+    {message}
+    """,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=["rangurahul98@gmail.com"],
+            fail_silently=False,
+        )
+
+        # Auto reply to visitor
+        send_mail(
+            subject="Thank you for contacting Rahul",
+            message=f"""
+    Hi {name},
+
+    Thank you for contacting me.
+
+    I have received your message and will get back to you soon.
+
+    Regards,
+    Rahul Rangu
+    """,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
         return Response(
-            {'message': 'Message sent successfully! I will get back to you soon.'},
+            {"message": "Message sent successfully! I will get back to you soon."},
             status=status.HTTP_201_CREATED
         )
 
